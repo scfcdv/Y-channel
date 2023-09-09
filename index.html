@@ -1,0 +1,131 @@
+
+<link rel="icon" href="https://scfcdv.github.io/homeweb2/favicon.ico">
+<title>チャンネル情報</title>
+API Keyを選択は1で動画が表示されなくなったら2にしてください。<a href="https://scfcdv.github.io/syousai/" target="_blank">詳細</a><br><label for="channelId"></label>
+<input type="text" id="channelId" placeholder="チャンネルID">
+<label for="apiKeySelector"> API Keyを選択:</label>
+<select id="apiKeySelector">
+    <option value="api_key_1">1</option>
+    <option value="api_key_2">2</option>
+    <option value="api_key_3">3</option>
+    <option value="api_key_4">4</option>
+    <option value="api_key_5">5</option>
+    <option value="api_key_6">6</option>
+    <option value="api_key_7">7</option>
+    <option value="api_key_8">8</option>
+    <option value="api_key_9">9</option>
+    <option value="api_key_10">10</option>
+    <option value="api_key_10">11</option>
+    <option value="api_key_10">12</option>
+</select>
+<button onclick="searchChannelInfo()">検索</button>
+<script>
+    function searchChannelInfo() {
+        // 選択されたAPIキーを取得
+        var apiKeySelector = document.getElementById("apiKeySelector");
+        var selectedApiKey = apiKeySelector.value;
+
+        // 選択されたAPIキーに応じてapikeyを変更
+        switch (selectedApiKey) {
+            case "api_key_1":
+                apiKey = "AIzaSyDIiV_2BdLkFOkoILineb-SIxqsiTDQgS4";
+                break;
+            case "api_key_2":
+                apiKey = "AIzaSyC4Kk4OZ5a2jml6zxN01NfVUauYvF5nbxg";
+                break;
+            case "api_key_3":
+                apiKey = "AIzaSyBL3JHDYH_36QjEmRxpkQ1jmDFnohFTjbI";
+                break;
+                case "api_key_4":
+                apiKey = "AIzaSyAD3j1bYWOimd1SE2JbVo7vvqsVomLcc44";
+                break;
+                case "api_key_5":
+                apiKey = "AIzaSyDQNyApBt9ilQsYdHG9IGlckZgFjaPtoNA";
+                break;
+                case "api_key_6":
+                apiKey = "AIzaSyDDfm_RkRVvKT80xKxYuCyfGQvkpNuouG8";
+                break;
+                case "api_key_7":
+                apiKey = "AIzaSyBs-w371nZnvqFfv_L--CdColGG1Ro-F5U";
+                break;
+                case "api_key_8":
+                apiKey = "AIzaSyAM5FYyjy16hN7OoQ9qoqgrU0L3VCjOWH4";
+                break;
+                case "api_key_9":
+                apiKey = "AIzaSyD6BIFAJTeleaYy6OnzSvK1hWA-bSpcilw";
+                break;
+                case "api_key_10":
+                apiKey = "AIzaSyDTFQbG-3GriRafc4V23V5rybT2EFJmVNI";
+                break;
+                case "api_key_11":
+                apiKey = "AIzaSyA1pf8gPSOolXW1kFreWp_jyfnSRrcWCsQ";
+                break;
+                case "api_key_12":
+                apiKey = "AIzaSyAR6IuGP-2cvhGWEBm9p3yedmAF2AdI2-M";
+                break;
+
+            default:
+                apiKey = "AIzaSyDIiV_2BdLkFOkoILineb-SIxqsiTDQgS4";
+                break;
+        }
+
+        function sleep(waitMsec) {
+var startMsec = new Date();
+
+// 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+while (new Date() - startMsec < waitMsec);
+}
+
+sleep(10);
+    searchChannelInfo2();
+    }
+</script>
+<div id="channelInfo"></div>
+<h2>最近の動画</h2>
+<div id="recentVideos"></div>
+<script>
+function searchChannelInfo2() {
+const channelId = document.getElementById('channelId').value;
+if (!channelId) {
+alert('チャンネルIDを入力してください');
+return;}
+var apiKey = 'AIzaSyBs-w371nZnvqFfv_L--CdColGG1Ro-F5U';
+const channelInfoUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails,statistics&id=${channelId}&key=${apiKey}`;
+const recentVideosUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=30&order=date&type=video&key=${apiKey}`;
+fetch(channelInfoUrl)
+.then(response => response.json())
+.then(data => {
+if (data.items.length === 0) {
+alert('指定されたチャンネルIDが見つかりませんでした');
+} else {
+displayChannelInfo(data.items[0]);}})
+.catch(error => console.error('エラー:', error));
+fetch(recentVideosUrl)
+.then(response => response.json())
+.then(data => {
+if (data.items.length === 0) {
+alert('最近の動画が見つかりませんでした');
+} else {
+displayRecentVideos(data.items);}})
+.catch(error => console.error('エラー:', error));}
+function displayChannelInfo(channel) {
+const channelInfoElement = document.getElementById('channelInfo');
+channelInfoElement.innerHTML = `
+<h2>${channel.snippet.title}</h2>
+<img src="${channel.snippet.thumbnails.medium.url}" alt="${channel.snippet.title} のアイコン">
+<p>${channel.snippet.description}</p>
+<p>チャンネル登録者数: ${channel.statistics.subscriberCount}人</p>
+<p>総再生回数: ${channel.statistics.viewCount}回</p>
+<p>総動画数: ${channel.statistics.videoCount}本</p>
+`;}
+function displayRecentVideos(videos) {
+const recentVideosElement = document.getElementById('recentVideos');
+let html = '<br>';
+videos.forEach(video => {
+html += `
+<h3>${video.snippet.title}</h3>
+<p>動画id: ${video.id.videoId}</p>
+<iframe width="560" height="320" src="https://www.youtube.com/embed/${video.id.videoId}" frameborder="0" allowfullscreen></iframe></a></br>`;});
+html += '</br>';
+recentVideosElement.innerHTML = html;}
+</script>
